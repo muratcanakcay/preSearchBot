@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { dataset } from './Dataset';
 
 // You must allow pop-ups from localhost:3000
 
@@ -6,8 +7,8 @@ const App: React.FC = () => {
 
     // DEFAULTS
     const defaultSearchCountTarget = 2
-    const defaultWaitBeforeClose = 2 // seconds
-    const defaultWaitBetweenSearches = 5 // seconds (must be greater than defaultWaitBeforeClose)
+    const defaultWaitBeforeClose = 5 // seconds
+    const defaultWaitBetweenSearches = 10 // seconds (must be greater than defaultWaitBeforeClose)
     // -----------
 
     let openedWindow: Window
@@ -22,13 +23,12 @@ const App: React.FC = () => {
     }
 
     const openWindow = () => {
-        console.log("Trying to open")
 
-        let newWindow = window.open("https://www.google.com")
+        let newWindow = window.open("https://engine.presearch.org/search?q=" + dataset[totalSearchCount])
 
         if (newWindow) {
             setSearchesConducted(++totalSearchCount)
-            if (totalSearchCount == searchCountTarget)
+            if (totalSearchCount.valueOf === searchCountTarget.valueOf)
                 clearInterval(intervalId)
 
             openedWindow = newWindow
@@ -37,11 +37,11 @@ const App: React.FC = () => {
     }
 
     const closeWindow = () => {
-        console.log("Trying to close")
         openedWindow.close()
     }
 
     const startSearches = () => {
+        openWindow()
         intervalId = setInterval(openWindow, defaultWaitBetweenSearches * 1000)
     }
 
