@@ -6,9 +6,9 @@ import { dataset } from './Dataset';
 const App: React.FC = () => {
 
     // DEFAULTS
-    const defaultSearchCountTarget = 2
-    const defaultWaitBeforeClose = 5 // seconds
-    const defaultWaitBetweenSearches = 10 // seconds (must be greater than defaultWaitBeforeClose)
+    const defaultSearchCountTarget = 50
+    const defaultWaitBeforeClose = 10 // seconds
+    const defaultWaitBetweenSearches = 15 // seconds 
     // -----------
 
     let openedWindow: Window
@@ -24,12 +24,17 @@ const App: React.FC = () => {
 
     const openWindow = () => {
 
-        let newWindow = window.open("https://engine.presearch.org/search?q=" + dataset[totalSearchCount])
+        let newWindow = window.open("https://engine.presearch.org/search?q=" + dataset[(Math.floor(Math.random() * dataset.length))])
 
         if (newWindow) {
             setSearchesConducted(++totalSearchCount)
-            if (totalSearchCount.valueOf === searchCountTarget.valueOf)
+
+            console.log(totalSearchCount, "   ", searchCountTarget)
+
+            if (totalSearchCount.valueOf() === searchCountTarget.valueOf()) {
+                console.log("Ending searches")
                 clearInterval(intervalId)
+            }
 
             openedWindow = newWindow
             setTimeout(closeWindow, defaultWaitBeforeClose * 1000)
