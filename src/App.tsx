@@ -12,14 +12,20 @@ const App: React.FC = () => {
     // -----------
 
     let openedWindow: Window
+    
     let intervalId: any
     let totalSearchCount: number = 0
 
     const [searchCountTarget, setSearchCountTarget] = useState(defaultSearchCountTarget)
     const [searchesConducted, setSearchesConducted] = useState(0)
+    const [stackOverflow, setStackOverflow] = useState(false)
 
     const countChanged = (e: any) => {
         setSearchCountTarget(e.target.value)
+    }
+
+    const stackChanged = (e: any) => {
+        setStackOverflow(!stackOverflow)
     }
 
     const openWindow = () => {
@@ -27,13 +33,16 @@ const App: React.FC = () => {
         let newWindow = window.open("https://engine.presearch.org/search?q=" + dataset[(Math.floor(Math.random() * dataset.length))])
 
         if (newWindow) {
-            setSearchesConducted(++totalSearchCount)
+            setSearchesConducted(++totalSearchCount)            
 
-            console.log(totalSearchCount, "   ", searchCountTarget)
+            console.log(totalSearchCount.valueOf() + "   " + searchCountTarget.valueOf())
 
-            if (totalSearchCount.valueOf() === searchCountTarget.valueOf()) {
+            if (totalSearchCount.valueOf() >= searchCountTarget.valueOf()) {
                 console.log("Ending searches")
                 clearInterval(intervalId)
+                if(stackOverflow) {                    
+                    window.open("https://www.stackoverflow.com/")
+                }
             }
 
             openedWindow = newWindow
@@ -72,8 +81,22 @@ const App: React.FC = () => {
                         onChange={(e) => countChanged(e)}
                     />
                     Searches conducted: {searchesConducted}
+                              
+                </div>                
+            </div>
+            <div className="row">
+                <div className="col">
+                    <input 
+                        id="stackOverflow"
+                        name="stackOverflow"
+                        type="checkbox"                        
+                        checked={stackOverflow}
+                        onChange={(e) => stackChanged(e)}
+                    />
+                    <span>Open stack exchange at finish</span>
                 </div>
             </div>
+            
         </div >
     );
 }
